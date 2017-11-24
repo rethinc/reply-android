@@ -1,0 +1,53 @@
+void updateVersion(major, minor, bugfix, versionCode){
+    def buildFile = file('./build.gradle')
+    def content = buildFile.getText("UTF-8")
+    content = content.replace("versionName = \"$project.ext.versionName\"", "versionName = \"$major.$minor.$bugfix\"")
+    content = content.replace("versionCode = $project.ext.versionCode", "versionCode = $versionCode")
+
+    buildFile.write(content)
+}
+
+task increaseMajorVersion {
+    doLast {
+        def (major) = project.ext.versionName.tokenize(".")
+        def versionCode = project.ext.versionCode + 1
+        major = Integer.parseInt(major) + 1
+
+        updateVersion(major, 0, 0, versionCode)
+    }
+}
+
+task increaseMinorVersion {
+    doLast {
+        def (major, minor) = project.ext.versionName.tokenize(".")
+        def versionCode = project.ext.versionCode + 1
+        minor = Integer.parseInt(minor) + 1
+
+        updateVersion(major, minor, 0, versionCode)
+    }
+}
+
+task increaseBugfixVersion {
+    doLast {
+        def (major, minor, bugfix) = project.ext.versionName.tokenize(".")
+        def versionCode = project.ext.versionCode + 1
+        bugfix = Integer.parseInt(bugfix) + 1
+
+        updateVersion(major, minor, bugfix, versionCode)
+    }
+}
+
+configure(increaseMajorVersion) {
+    group = 'versioning'
+    description = 'Increase major and versionCode. Reset minor and bugfix version'
+}
+
+configure(increaseMinorVersion) {
+    group = 'versioning'
+    description = 'Increase minor and versionCode. Reset bugfix version'
+}
+
+configure(increaseBugfixVersion) {
+    group = 'versioning'
+    description = 'Increase bugfix and versionCode'
+}

@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'de.mannodermaus.android-junit5'
+
+android {
+    compileSdkVersion 26
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+junitPlatform {
+    jupiterVersion junit_jupiter_version
+    vintageVersion junit_vintage_version
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:$build_tools_version"
+    implementation "com.android.support.constraint:constraint-layout:$contraint_layout_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    implementation "com.google.code.gson:gson:$gson_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    testImplementation junit5()
+    testImplementation junit5Params()
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrest_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testCompileOnly junit5EmbeddedRuntime()
+
+    androidTestImplementation "com.android.support.test:runner:$android_test_runner_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+
+}
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'kotlin-android-extensions'
