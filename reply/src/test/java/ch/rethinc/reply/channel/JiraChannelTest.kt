@@ -43,7 +43,7 @@ class JiraChannelTest {
 
             lock.await(2000, TimeUnit.MILLISECONDS)
             val request = interceptor.requests[0]
-            assertThat(request.url().encodedPath(), toBe("/rest/api/2/issue"))
+            assertThat(request.url().encodedPath(), toBe("/rest/api/2/iss"))
             assertThat(request.method(), toBe("POST"))
         }
 
