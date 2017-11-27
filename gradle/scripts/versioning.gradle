@@ -1,53 +1,86 @@
-void updateVersion(major, minor, bugfix, versionCode){
+def updateVersion(major, minor, bugfix, suffix, versionCode){
+
+    def currentVersion = project.ext.versionName
+    def newVersion = "$major.$minor.$bugfix"
+    if (suffix != null) {
+        newVersion += "-$suffix"
+    }
+
     def buildFile = file('./build.gradle')
-    def content = buildFile.getText("UTF-8")
-    content = content.replace("versionName = \"$project.ext.versionName\"", "versionName = \"$major.$minor.$bugfix\"")
-    content = content.replace("versionCode = $project.ext.versionCode", "versionCode = $versionCode")
+    def buildFileContent = buildFile.getText("UTF-8")
+    buildFileContent = buildFileContent.replace("versionName = \"$currentVersion\"", "versionName = \"$newVersion\"")
+    buildFileContent = buildFileContent.replace("versionCode = $project.ext.versionCode", "versionCode = $versionCode")
+    buildFile.write(buildFileContent)
 
-    buildFile.write(content)
+    updateReadmeFile(newVersion)
 }
 
-task increaseMajorVersion {
-    doLast {
-        def (major) = project.ext.versionName.tokenize(".")
-        def versionCode = project.ext.versionCode + 1
-        major = Integer.parseInt(major) + 1
+def updateReadmeFile(version) {
+    def readmeFile = file('./README.md')
+    def readmeContent = readmeFile.getText("UTF-8")
+    def newReadmeContent = readmeContent.split('\n').collect { l ->
+        println(l)
+        def isVersionShield = l.startsWith('![Version')
+        isVersionShield ? "![Version $version](https://img.shields.io/version/${version}.png)" : l
+    }.join('\n')
+    readmeFile.write(newReadmeContent)
+}
 
-        updateVersion(major, 0, 0, versionCode)
+def parseVersion() {
+    def (major, minor, bugfixWithSuffix) = project.ext.versionName.tokenize(".")
+    def (bugfix, suffix) = bugfixWithSuffix.tokenize("-")
+    return [Integer.parseInt(major), Integer.parseInt(minor), Integer.parseInt(bugfix), suffix, project.ext.versionCode]
+}
+
+task majorVersion {
+    doLast {
+        def (major, minor, bugfix, suffix, versionCode) = parseVersion()
+        versionCode += 1
+        major += 1
+        updateVersion(major, 0, 0, suffix, versionCode)
     }
 }
 
-task increaseMinorVersion {
+task minorVersion {
     doLast {
-        def (major, minor) = project.ext.versionName.tokenize(".")
-        def versionCode = project.ext.versionCode + 1
-        minor = Integer.parseInt(minor) + 1
-
-        updateVersion(major, minor, 0, versionCode)
+        def (major, minor, bugfix, suffix, versionCode) = parseVersion()
+        versionCode += 1
+        minor += 1
+        updateVersion(major, minor, 0, suffix, versionCode)
     }
 }
 
-task increaseBugfixVersion {
+task bugfixVersion {
     doLast {
-        def (major, minor, bugfix) = project.ext.versionName.tokenize(".")
-        def versionCode = project.ext.versionCode + 1
-        bugfix = Integer.parseInt(bugfix) + 1
-
-        updateVersion(major, minor, bugfix, versionCode)
+        def (major, minor, bugfix, suffix, versionCode) = parseVersion()
+        versionCode += 1
+        bugfix += 1
+        updateVersion(major, minor, bugfix, suffix, versionCode)
     }
 }
 
-configure(increaseMajorVersion) {
+task updateReadme {
+    doLast {
+        updateReadmeFile(project.ext.versionName)
+    }
+}
+
+configure(majorVersion) {
     group = 'versioning'
     description = 'Increase major and versionCode. Reset minor and bugfix version'
 }
 
-configure(increaseMinorVersion) {
+configure(minorVersion) {
     group = 'versioning'
     description = 'Increase minor and versionCode. Reset bugfix version'
 }
 
-configure(increaseBugfixVersion) {
+configure(bugfixVersion) {
     group = 'versioning'
     description = 'Increase bugfix and versionCode'
+}
+
+configure(updateReadme) {
+    group = 'versioning'
+    description = 'Update Readme Version from gradle project version'
 }
