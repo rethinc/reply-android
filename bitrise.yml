@@ -1,0 +1,29 @@
+---
+app:
+  envs:
+  - opts:
+      is_expand: false
+    GRADLE_BUILD_FILE_PATH: build.gradle
+  - opts:
+      is_expand: false
+    GRADLEW_PATH: "./gradlew"
+workflows:
+  ci:
+    steps:
+    - cache-pull@2.0.0: {}
+    - install-missing-android-tools@2.0.5: {}
+    - gradle-runner@1.8.0:
+        inputs:
+        - gradle_file: "$GRADLE_BUILD_FILE_PATH"
+        - gradle_task: build
+        - gradlew_path: "$GRADLEW_PATH"
+    - cache-push@2.0.3:
+      inputs:
+      - cache_paths: |-
+          $HOME/.gradle
+          ./.gradle
+      - ignore_check_on_paths: |-
+          $HOME/.gradle/caches/*.lock
+          ./.gradle/*.lock
+          ./.gradle/*.bin
+
