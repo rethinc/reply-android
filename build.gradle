@@ -26,9 +26,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:$android_junit5"
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
@@ -44,4 +41,4 @@ task clean(type: Delete) {
 }
 
 apply from: 'gradle/scripts/versioning.gradle'
-apply from: 'gradle/scripts/continuous-intergration.gradle'
+apply from: 'gradle/scripts/cd.gradle'
