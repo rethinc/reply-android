@@ -1,0 +1,12 @@
+task snapshotRelease(dependsOn: 'reply-example-app:assembleDebug') {
+    def shortHash = ""
+    if (System.env.GIT_CLONE_COMMIT_HASH) {
+        shortHash = "-" + System.env.GIT_CLONE_COMMIT_HASH.substring(0, 7)
+    }
+    project.versionName = "$project.versionName$shortHash"
+}
+
+configure(snapshotRelease) {
+    group = 'ci/cd'
+    description = 'trigger used for pushes on develop branch.'
+}
