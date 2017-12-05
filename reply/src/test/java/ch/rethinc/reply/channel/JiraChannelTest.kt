@@ -1,11 +1,12 @@
 package ch.rethinc.reply.channel
 
 import ch.rethinc.reply.channel.jira.*
-import ch.rethinc.reply.helper.FakeResponseInterceptor
 import ch.rethinc.reply.core.Feedback
 import ch.rethinc.reply.core.ReplyChannelException
+import ch.rethinc.reply.helper.FakeResponseInterceptor
 import com.google.gson.Gson
-import okhttp3.*
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.BeforeEach
