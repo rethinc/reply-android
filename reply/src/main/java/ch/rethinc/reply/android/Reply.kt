@@ -5,18 +5,19 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import ch.rethinc.reply.android.feedback.FeedbackActivity
+import ch.rethinc.reply.core.Feedback
 import ch.rethinc.reply.core.ReplyChannel
 
 class Reply(application: Application, channel: ReplyChannel) {
 
-    private val screenshotRepository =  ScreenshotRepository()
+    private val screenshotRepository = FeedbackRepository()
     private var currentActivity: Activity? = null
     private val screenshotDetector = ScreenshotDetector()
 
     init {
         application.registerActivityLifecycleCallbacks(LifecycleCallbacks(this))
         screenshotDetector.startDetecting {
-            screenshotRepository.save(it)
+            screenshotRepository.save(Feedback(it))
             startFeedbackCycle()
         }
     }
