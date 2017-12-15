@@ -10,7 +10,14 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val jiraConfiguration = JiraConfiguration("", "", "", "", "")
-        Reply(this.application, JiraChannel.create(jiraConfiguration))
+        setContentView(R.layout.main_activity)
+        Reply(this.application, JiraChannel.create(
+                JiraConfiguration(
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""))
+        )
     }
 }

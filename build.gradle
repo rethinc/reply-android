@@ -4,27 +4,34 @@ project.ext {
 }
 
 buildscript {
+    // build environment
     ext.kotlin_version = '1.2.10'
-    ext.build_tools_version = '26.0.1'
-    ext.contraint_layout_version = '1.0.2'
-    ext.android_support_library_version = '26.1.0'
+    ext.android_tools_build_version = '3.0.1'
+
+    // Android libs
+    ext.android_support_version = '26.1.0'
+    ext.android_support_constraint_version = '1.0.2'
+
+    // External libs
+    ext.okhttp3_version = '3.9.0'
+    ext.gson_version = '2.8.2'
+
+    // Testing
+    ext.android_support_test_version = '1.0.1'
     ext.junit_jupiter_version = '5.0.1'
     ext.junit_vintage_version = '4.12.1'
+    ext.android_junit5 = '1.0.11'
     ext.hamcrest_version = '1.3'
     ext.mockito_version = '2.10.0'
     ext.mockito_kotline_version = '1.5.0'
-    ext.android_test_runner_version = '1.0.0'
-    ext.espresso_version = '3.0.0'
-    ext.okhttp3_version = '3.9.0'
-    ext.gson_version = '2.8.2'
-    ext.android_junit5 = '1.0.11'
+    ext.android_support_test_espresso_version = '3.0.0'
 
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath "com.android.tools.build:gradle:$android_tools_build_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:$android_junit5"
     }

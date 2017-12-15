@@ -26,7 +26,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':reply')
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.android.support.constraint:constraint-layout:$android_support_constraint_version"
+
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    androidTestImplementation "com.android.support.test:runner:$android_support_test_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$android_support_test_espresso_version"
 }
