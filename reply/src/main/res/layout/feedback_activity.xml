@@ -12,13 +12,13 @@
         android:layout_height="57dp"
         android:elevation="4dp"
         android:title="Feedback"
-        android:background="@color/colorPrimary"
+        android:background="@color/reply_colorPrimary"
         />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/backgroundPrimary">
+        android:background="@color/reply_backgroundPrimary">
 
         <LinearLayout
             android:layout_width="match_parent"

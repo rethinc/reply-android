@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#132C45</color>
-    <color name="colorPrimaryDark">#0E2133</color>
+    <color name="reply_colorPrimary">#132C45</color>
+    <color name="reply_colorPrimaryDark">#0E2133</color>
 
-    <color name="colorAccent">#DE4B4B</color>
+    <color name="reply_colorAccent">#DE4B4B</color>
 
-    <color name="textDarkPrimary">#DE000000</color>
-    <color name="textDarkSecondary">#8A000000</color>
-    <color name="textDarkDisabled">#61000000</color>
+    <color name="reply_textDarkPrimary">#DE000000</color>
+    <color name="reply_textDarkSecondary">#8A000000</color>
+    <color name="reply_textDarkDisabled">#61000000</color>
 
-    <color name="textLightPrimary">#FFFFFF</color>
-    <color name="textLightSecondary">#B2FFFFFF</color>
-    <color name="textLightDisabled">#80FFFFFF</color>
+    <color name="reply_textLightPrimary">#FFFFFF</color>
+    <color name="reply_textLightSecondary">#B2FFFFFF</color>
+    <color name="reply_textLightDisabled">#80FFFFFF</color>
 
-    <color name="backgroundPrimary">#999999</color>
+    <color name="reply_backgroundPrimary">#999999</color>
 </resources>
