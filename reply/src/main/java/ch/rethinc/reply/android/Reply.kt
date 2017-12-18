@@ -16,13 +16,13 @@ class Reply(application: Application, channel: ReplyChannel) {
     init {
         application.registerActivityLifecycleCallbacks(LifecycleCallbacks(this))
         screenshotDetector.startDetecting {
-            DiContainer.instance.screenshot = it
-            startFeedbackCycle()
+            startFeedback(it)
         }
         DiContainer.instance.channel = channel
     }
 
-    private fun startFeedbackCycle() {
+    fun startFeedback(screenshot:ByteArray) {
+        DiContainer.instance.screenshot = screenshot
         val activity = currentActivity.let { it } ?: return
         val feedbackIntent = Intent(currentActivity, FeedbackActivity::class.java)
         activity.startActivity(feedbackIntent)

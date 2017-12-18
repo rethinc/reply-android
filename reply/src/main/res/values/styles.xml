@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ReplyTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+    <style name="ReplyTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:textColorPrimary">#FF0000</item>
+        <item name="android:textColorPrimary">@color/textLightPrimary</item>
     </style>
 </resources>

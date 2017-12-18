@@ -1,12 +1,12 @@
 package ch.rethinc.reply.core
 
 import com.nhaarman.mockito_kotlin.*
+
+import org.junit.Assert.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-
 import org.hamcrest.Matchers.`is` as toBe
-
 
 class FeedbackInteractorTest {
 
@@ -23,68 +23,86 @@ class FeedbackInteractorTest {
     }
 
     @Test
-    fun screenshotExists_attachingOutput_presentScreenshot() {
-        sut.attach(outputSpy)
+    fun screenshotExists_onInit_presentScreenshot() {
+        sut.onInit(outputSpy)
 
         verify(outputSpy).presentScreenshot(screenshot)
     }
 
     @Nested
-    inner class OutputIsAttached {
+    inner class NoFeedbackItems {
         @BeforeEach
-        fun attachOutput() {
-            sut.attach(outputSpy)
+        fun init() {
+            sut.onInit(outputSpy)
         }
 
         @Test
-        fun validFeedbackItem_onFeedback_presentAddedFeedbackItems() {
-            val expectedItem = FeedbackItem("Feedback message", Coordinate(1, 1))
+        fun validFeedbackItems_onNewFeedback_addFeedbackItems() {
+            sut.onNewFeedback(Coordinate(1, 1))
+            sut.onNewFeedback(Coordinate(5, 5))
 
-            sut.onFeedback("Feedback message", Coordinate(1, 1))
-
-            verify(outputSpy).presentFeedbackItems(listOf(expectedItem))
+            verify(outputSpy).addFeedback(argThat { number == 1 })
+            verify(outputSpy).addFeedback(argThat { number == 2 })
         }
 
-        @Nested
-        inner class FeedbackItemExists {
-            lateinit var existingItem: FeedbackItem
+        @Test
+        fun existingFeedbackItems_onChangeFeedback_updateFeedback() {
+            sut.onNewFeedback(Coordinate(1, 1))
 
-            @BeforeEach
-            fun createFeedbackItem() {
-                sut.onFeedback("Feedback message", Coordinate(1, 1))
-                argumentCaptor<List<FeedbackItem>>().apply {
-                    verify(outputSpy).presentFeedbackItems(capture())
-                    existingItem = firstValue[0]
-                }
+            sut.onChangeFeedback(1, "Message")
+
+            verify(outputSpy).updateFeedback(eq(1), check {
+                assertThat(it.message, toBe("Message"))
+            })
+        }
+
+        @Test
+        fun existingFeedbackItem_removeItem_removeFeedback() {
+            sut.onNewFeedback(Coordinate(10, 10))
+
+            sut.onRemoveFeedback(1)
+
+            verify(outputSpy).removeFeedback(1)
+        }
+
+        @Test
+        fun existingFeedbackItems_removeItem_updateItemNumbers() {
+            sut.onNewFeedback(Coordinate(10, 10))
+            sut.onNewFeedback(Coordinate(10, 10))
+            sut.onNewFeedback(Coordinate(10, 10))
+
+            sut.onRemoveFeedback(1)
+
+            verify(outputSpy).removeFeedback(1)
+            verify(outputSpy).updateFeedback(eq(2), argThat { number == 1 })
+            verify(outputSpy).updateFeedback(eq(3), argThat { number == 2 })
+        }
+
+        @Test
+        fun validFeedbackItem_onSendFeedback_sendFeedback() {
+            sut.onNewFeedback(Coordinate(1, 1))
+            sut.onChangeFeedback(1, "Message")
+
+            sut.onSendFeedback()
+
+            verify(channelStub).sendFeedback(argThat {
+                feedbackItems[0].message == "Message"
+            }, any(), any())
+        }
+
+        @Test
+        fun existingValidFeedback_sendFeedbackSuccessful_finishFeedbackProcess() {
+            sut.onNewFeedback(Coordinate(10, 10))
+            whenever(channelStub.sendFeedback(any(), any(), any())).then {
+                @Suppress("UNCHECKED_CAST")
+                val success = it.arguments[1] as () -> Unit
+                success()
+                true
             }
 
-            @Test
-            fun existingFeedbackItem_removeFeedbackItem_presentFeedbackItemsExludingRemoved() {
-                sut.onRemoveFeedback(existingItem)
+            sut.onSendFeedback()
 
-                verify(outputSpy).presentFeedbackItems(emptyList())
-            }
-
-            @Test
-            fun existingFeedbackItem_onChangeExistingFeedbackItem_presentUpdatedFeedbackItem() {
-                val expectedItem = FeedbackItem("Updated Message", Coordinate(1, 1))
-
-                sut.onChangeFeedback(existingItem, expectedItem.message)
-
-                verify(outputSpy).presentFeedbackItems(listOf(expectedItem))
-            }
-
-            @Test
-            fun existingValidFeedback_sendFeedbackSuccessful_finishFeedbackProcess() {
-                sut.onSendFeedback()
-
-                argumentCaptor<()->Unit>().apply {
-                    verify(channelStub).sendFeedback(any(),capture(), any())
-                    firstValue()
-                }
-
-                verify(outputSpy).finishFeedback()
-            }
+            verify(outputSpy).finishFeedback()
         }
     }
 }
